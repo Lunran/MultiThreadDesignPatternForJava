@@ -19,10 +19,12 @@ public class Data {
 	public synchronized void change(String newContent) {
 		content = newContent;
 		changed = true;
+		System.out.println(Thread.currentThread().getName() + " changes, content = " + content);
 	}
 
 	public synchronized void save() throws IOException {
 		if (!changed) {
+			System.out.println(Thread.currentThread().getName() + " balks");
 			return;
 		}
 
