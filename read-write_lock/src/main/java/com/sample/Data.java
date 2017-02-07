@@ -1,9 +1,15 @@
 package com.sample;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 public class Data {
 
 	private final char[] buffer;
-	private final ReadWriteLock lock = new ReadWriteLock();
+	private final ReadWriteLock lock = new ReentrantReadWriteLock(true);
+	private final Lock readLock = lock.readLock();
+	private final Lock writeLock = lock.writeLock();
 
 	public Data(int size) {
 		this.buffer = new char[size];
@@ -13,11 +19,11 @@ public class Data {
 	}
 
 	public char[] read() throws InterruptedException {
-		lock.readLock();
+		readLock.lock();
 		try {
 			return doRead();
 		} finally {
-			lock.readUnlock();
+			readLock.unlock();
 		}
 	}
 
@@ -39,11 +45,11 @@ public class Data {
 	}
 
 	public void write(char c) throws InterruptedException {
-		lock.writeLock();
+		writeLock.lock();
 		try {
 			doWrite(c);
 		} finally {
-			lock.writeUnlock();
+			writeLock.unlock();
 		}
 	}
 
