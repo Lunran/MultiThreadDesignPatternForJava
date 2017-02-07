@@ -1,40 +1,22 @@
 package com.sample;
 
-public class Table {
+import java.util.concurrent.ArrayBlockingQueue;
 
-	private final String[] buffer;
-	private int tail;
-	private int head;
-	private int count;
+public class Table extends ArrayBlockingQueue<String> {
+
+	private static final long serialVersionUID = -8154500792310483194L;
 
 	public Table(int count) {
-		this.buffer = new String[count];
-		this.head = 0;
-		this.tail = 0;
-		this.count = 0;
+		super(count);
 	}
 
-	public synchronized void put(String cake) throws InterruptedException {
+	public void put(String cake) throws InterruptedException {
 		System.out.println(Thread.currentThread().getName() + " puts " + cake);
-		while (count >= buffer.length) {
-			System.out.println(Thread.currentThread().getName() + " can't put, waits..");
-			wait();
-		}
-		buffer[tail] = cake;
-		tail = (tail + 1) % buffer.length;
-		count++;
-		notifyAll();
+		super.put(cake);
 	}
 
-	public synchronized String take() throws InterruptedException {
-		while (count <= 0) {
-			System.out.println(Thread.currentThread().getName() + " can't get, waits..");
-			wait();
-		}
-		String cake = buffer[head];
-		head = (head + 1) % buffer.length;
-		count--;
-		notifyAll();
+	public String take() throws InterruptedException {
+		String cake = super.take();
 		System.out.println(Thread.currentThread().getName() + " takes " + cake);
 		return cake;
 	}
