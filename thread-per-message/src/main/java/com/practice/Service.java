@@ -1,31 +1,35 @@
 package com.practice;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 public class Service {
 
-	private static Lock lock = new ReentrantLock();
+	private static Thread worker = null;
 
-	public static void service() {
-		if (!lock.tryLock()) {
-			System.out.println("balks");
-			return;
-		}
-		try {
-			System.out.println("service");
-			for (int i=0; i<50; i++) {
-				System.out.print(".");
-				Thread.sleep(100);
+	public static synchronized void service() {
+		if (worker != null && worker.isAlive()) {
+			worker.interrupt();
+			try {
+				worker.join();
 			}
-			System.out.println("done.");
+			catch (InterruptedException ie) {
+			}
+			worker = null;
 		}
-		catch (InterruptedException ie) {
-			System.out.println("canceled");
-		}
-		finally {
-			lock.unlock();
-		}
+			System.out.println("service");
+			worker = new Thread() {
+					public void run() {
+						try {
+							for (int i=0; i<50; i++) {
+								System.out.print(".");
+								Thread.sleep(100);
+							}
+							System.out.println("done.");
+						}
+						catch (InterruptedException ie) {
+							System.out.println("canceled");
+						}
+					}
+				};
+			worker.start();
 	}
 
 }

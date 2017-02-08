@@ -26,12 +26,7 @@ public class MyFrame extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		new Thread() {
-			@Override
-			public void run() {
-				Service.service();
-			}
-		}.start();
+		Service.service();
 	}
 
 }
