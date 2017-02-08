@@ -1,24 +1,26 @@
 package com.sample;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Host {
 
 	private final Helper helper = new Helper();
-	private final Executor executor;
+	private final ScheduledExecutorService scheduledExecutorService;
 
-	public Host(Executor executor) {
-		this.executor = executor;
+	public Host(ScheduledExecutorService scheduledExecutorService) {
+		this.scheduledExecutorService = scheduledExecutorService;
 	}
 
 	public void request(final int count, final char c) {
 		System.out.println("    request(" + count + ", " + c + ") BEGIN");
-		executor.execute(
+		scheduledExecutorService.schedule(
 			new Runnable() {
 				public void run() {
 					helper.handle(count, c);
 				}
-			}
+			},
+			3L, TimeUnit.SECONDS
 		);
 		System.out.println("    request(" + count + ", " + c + ") END");
 	}
