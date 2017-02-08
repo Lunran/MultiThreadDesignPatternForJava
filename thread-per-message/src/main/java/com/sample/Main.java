@@ -1,12 +1,17 @@
 package com.sample;
 
-import java.util.concurrent.Executors;
+import java.util.concurrent.Executor;
 
 class Main {
 
 	public static void main(String args[]) {
 		System.out.println("main BEGIN");
-		Host host = new Host(Executors.defaultThreadFactory());
+		Host host = new Host(new Executor() {
+				@Override
+				public void execute(Runnable r) {
+					new Thread(r).start();
+				}
+			});
 		host.request(10, 'A');
 		host.request(20, 'B');
 		host.request(30, 'C');
