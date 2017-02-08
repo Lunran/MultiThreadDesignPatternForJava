@@ -1,13 +1,24 @@
 package com.sample;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 class Main {
 
 	public static void main(String args[]) {
-		Channel channel = new Channel(2);
-		channel.startWorkers();
-		new ClientThread("Alice", channel).start();
-		new ClientThread("Bobby", channel).start();
-		new ClientThread("Chris", channel).start();
+		ExecutorService executorService = Executors.newFixedThreadPool(5);
+		try {
+			new ClientThread("Alice", executorService).start();
+			new ClientThread("Bobby", executorService).start();
+			new ClientThread("Chris", executorService).start();
+			Thread.sleep(5000);
+		}
+		catch (InterruptedException ie) {
+			ie.printStackTrace();
+		}
+		finally {
+			executorService.shutdown();
+		}
 	}
 
 }

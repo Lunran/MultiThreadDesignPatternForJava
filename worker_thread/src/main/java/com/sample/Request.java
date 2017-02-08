@@ -2,7 +2,7 @@ package com.sample;
 
 import java.util.Random;
 
-public class Request {
+public class Request implements Runnable {
 
 	private final String name;
 	private final int number;
@@ -13,7 +13,8 @@ public class Request {
 		this.number = number;
 	}
 
-	public void execute() {
+	@Override
+	public void run() {
 		System.out.println(Thread.currentThread().getName() + " executes " + this);
 		try {
 			Thread.sleep(random.nextInt(1000));
