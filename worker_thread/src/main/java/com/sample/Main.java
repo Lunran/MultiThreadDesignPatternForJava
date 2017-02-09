@@ -7,18 +7,26 @@ class Main {
 
 	public static void main(String args[]) {
 		ExecutorService executorService = Executors.newFixedThreadPool(5);
+		ClientThread[] clientThreads = new ClientThread[] {
+			new ClientThread("Alice", executorService),
+			new ClientThread("Bobby", executorService),
+			new ClientThread("chris", executorService)
+		};
+
+		for (ClientThread clientThread: clientThreads) {
+			clientThread.start();
+		}
 		try {
-			new ClientThread("Alice", executorService).start();
-			new ClientThread("Bobby", executorService).start();
-			new ClientThread("Chris", executorService).start();
 			Thread.sleep(5000);
 		}
 		catch (InterruptedException ie) {
 			ie.printStackTrace();
 		}
-		finally {
-			executorService.shutdown();
+
+		for (ClientThread clientThread: clientThreads) {
+			clientThread.stopThread();
 		}
+		executorService.shutdown();
 	}
 
 }
