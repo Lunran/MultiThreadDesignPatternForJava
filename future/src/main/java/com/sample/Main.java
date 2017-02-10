@@ -1,5 +1,7 @@
 package com.sample;
 
+import java.util.concurrent.ExecutionException;
+
 class Main {
 
 	public static void main(String args[]) {
@@ -7,7 +9,7 @@ class Main {
 
 		Host host = new Host();
 		Data data1 = host.request(10, 'A');
-		Data data2 = host.request(20, 'B');
+		Data data2 = host.request(-20, 'B');
 		Data data3 = host.request(30, 'C');
 
 		System.out.println("main otherJob BEGIN");
@@ -20,9 +22,13 @@ class Main {
 
 		System.out.println("main otherJob END");
 
-		System.out.println("data1 = " + data1.getContent());
-		System.out.println("data2 = " + data2.getContent());
-		System.out.println("data3 = " + data3.getContent());
+		try {
+			System.out.println("data1 = " + data1.getContent());
+			System.out.println("data2 = " + data2.getContent());
+			System.out.println("data3 = " + data3.getContent());
+		} catch (ExecutionException ee) {
+			ee.printStackTrace();
+		}
 
 		System.out.println("main END");
 	}

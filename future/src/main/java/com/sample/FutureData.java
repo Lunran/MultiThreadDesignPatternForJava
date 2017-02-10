@@ -11,14 +11,12 @@ public class FutureData extends FutureTask<RealData> implements Data {
 	}
 
 	@Override
-	public String getContent() {
+	public String getContent() throws ExecutionException {
 		String content = null;
 		try {
 			content = get().getContent();
 		} catch (InterruptedException ie) {
 			ie.printStackTrace();
-		} catch (ExecutionException ee) {
-			ee.printStackTrace();
 		}
 		return content;
 	}
