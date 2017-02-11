@@ -7,9 +7,19 @@ class Main {
 
 	public static void main(String args[]) {
 		ActiveObject activeObject = ActiveObjectFactory.createActiveObject();
-		new MakerClientThread("Alice", activeObject).start();
-		new MakerClientThread("Bobby", activeObject).start();
-		new DisplayClientThread("Chris", activeObject).start();
+		try {
+			new MakerClientThread("Alice", activeObject).start();
+			new MakerClientThread("Bobby", activeObject).start();
+			new DisplayClientThread("Chris", activeObject).start();
+			Thread.sleep(5000);
+		}
+		catch (InterruptedException e) {
+			// do nothing
+		}
+		finally {
+			System.out.println("*** shutdown ***");
+			activeObject.shutdown();
+		}
 	}
 
 }

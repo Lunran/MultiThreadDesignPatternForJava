@@ -1,5 +1,8 @@
 package com.sample;
 
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.RejectedExecutionException;
+
 import com.sample.activeobject.ActiveObject;
 
 /**
@@ -24,7 +27,11 @@ public class DisplayClientThread extends Thread {
 				Thread.sleep(200);
 			}
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			System.out.println(Thread.currentThread().getName() + ": " + e);
+		} catch (RejectedExecutionException e) {
+			System.out.println(Thread.currentThread().getName() + ": " + e);
+		} catch (CancellationException e) {
+			System.out.println(Thread.currentThread().getName() + ": " + e);
 		}
 	}
 

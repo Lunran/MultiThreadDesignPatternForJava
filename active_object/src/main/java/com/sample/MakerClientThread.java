@@ -1,7 +1,11 @@
 package com.sample;
 
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
+
 import com.sample.activeobject.ActiveObject;
-import com.sample.activeobject.Result;
 
 /**
  * Creates a thread as in Thread-Per-Message pattern
@@ -22,13 +26,19 @@ public class MakerClientThread extends Thread {
 	public void run() {
 		try {
 			for (int i=0; true; i++) {
-				Result<String> result = activeObject.makeString(i, fillchar);   // Future pattern
+				Future<String> future = activeObject.makeString(i, fillchar);
 				Thread.sleep(10);
-				String value = result.getResultValue();
+				String value = future.get();
 				System.out.println(Thread.currentThread().getName() + ": value = " + value);
 			}
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			System.out.println(Thread.currentThread().getName() + ": " + e);
+		} catch (ExecutionException e) {
+			System.out.println(Thread.currentThread().getName() + ": " + e);
+		} catch (RejectedExecutionException e) {
+			System.out.println(Thread.currentThread().getName() + ": " + e);
+		} catch (CancellationException e) {
+			System.out.println(Thread.currentThread().getName() + ": " + e);
 		}
 	}
 

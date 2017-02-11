@@ -1,8 +1,11 @@
 package com.sample.activeobject;
 
+import java.util.concurrent.Future;
+
 public interface ActiveObject {
 
-	Result<String> makeString(int count, char fillchar);
+	Future<String> makeString(int count, char fillchar);
 	void displayString(String string);
+	void shutdown();
 
 }
