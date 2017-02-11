@@ -17,7 +17,6 @@ public class ClientThread extends Thread {
 				e.printStackTrace();
 			}
 		}
-		Log.close();
 		System.out.println(getName() + " END");
 	}
 

@@ -18,9 +18,27 @@ public class Log {
 		if (tsLog == null) {
 			tsLog = new TSLog(Thread.currentThread().getName() + "-log.txt");
 			tsLogCollection.set(tsLog);
+			startWatcher(tsLog);
 		}
 
 		return tsLog;
+	}
+
+	private static void startWatcher(final TSLog tsLog) {
+		final Thread target = Thread.currentThread();
+		new Thread() {
+			@Override
+			public void run() {
+				System.out.println("watcher for " + target.getName() + " BEGIN");
+				try {
+					target.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				tsLog.close();
+				System.out.println("watcher for " + target.getName() + " END");
+			}
+		}.start();
 	}
 
 }
